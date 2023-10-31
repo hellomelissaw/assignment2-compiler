@@ -205,4 +205,10 @@ class Circuit extends AST{
 
         System.out.println(env.toString());
     }
+
+    public void runSimulator(Environment env) {
+        initialize(env);
+        for(int i = 0 ; i < simlength ; i ++)
+            nextCycle(env, i);
+    }
 }
