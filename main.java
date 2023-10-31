@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class main {
     public static void main(String[] args) throws IOException{
-
+		System.out.println("Hi im printing");
 	// we expect exactly one argument: the name of the input file
 	if (args.length!=1) {
 	    System.err.println("\n");
@@ -54,6 +54,7 @@ public class main {
 	    simulation of the given hardware for given simulation
 	    inputs. The method for starting the simulation should be
 	    called here for the Circuit p. */
+
     }
 }
 
@@ -118,6 +119,7 @@ class JaxMaker extends AbstractParseTreeVisitor<String> implements hwVisitor<Str
 
     public String visitConjunction(hwParser.ConjunctionContext ctx){
 	return "("+visit(ctx.e1)+"\\wedge"+visit(ctx.e2)+")";
+
     };
 
     public String visitDisjunction(hwParser.DisjunctionContext ctx){

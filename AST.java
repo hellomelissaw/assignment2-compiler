@@ -75,6 +75,14 @@ class Latch extends AST{
 	this.inputname=inputname;
 	this.outputname=outputname;
     }
+    public void initialize(Environment env) {
+        env.setVariable(outputname,false);
+    }
+
+    public void nextCycle(Environment env){
+        env.setVariable(outputname , env.getVariable(inputname));
+    }
+
 }
 
 // An Update is any of the lines " signal = expression "
@@ -84,6 +92,7 @@ class Update extends AST{
     String name;
     Expr e;
     Update(String name, Expr e){this.e=e; this.name=name;}
+    public void Eval(Environment env){  env.setVariable(name,e.eval(env));}
 }
 
 /* A Trace is a signal and an array of Booleans, for instance each
@@ -99,6 +108,14 @@ class Trace extends AST{
     Trace(String signal, Boolean[] values){
 	this.signal=signal;
 	this.values=values;
+    }
+    public String toString(){
+        StringBuilder signalTrace = new StringBuilder();
+        for(boolean value : values) {
+            signalTrace.append(value);
+        }
+        System.out.println("This is our signal trace: " + signalTrace);
+        return signalTrace.toString();
     }
 }
 
