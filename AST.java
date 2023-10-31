@@ -108,9 +108,7 @@ class Trace extends AST{
     }
     public String toString(){
         String signalTrace = "";
-        //StringBuilder signalTrace = new StringBuilder();
         for(boolean value : values) {
-            //signalTrace.append(value);
             signalTrace+=value;
         }
         return signalTrace;
@@ -161,16 +159,13 @@ class Circuit extends AST{
     }
 
     public void initialize(Environment env) {
-        if(simlength == 0){
-            System.out.println("Input signals 0.");
-        } else {
-                String name = inputs.get(0);
-                if(name == null){
-                    System.out.println("Input undefined.");
-                } else {
-                    env.setVariable(name, env.getVariable(name));
+
+            for (Trace trace: siminputs) {
+                if(trace.values.length == 0){
+                    System.err.println("Siminput value array length 0."); System.exit(-1);
                 }
-        }
+                env.setVariable(trace.signal, trace.values[0]);
+            }
 
         for (Latch latch : latches) {
             latch.initialize(env);
@@ -180,7 +175,7 @@ class Circuit extends AST{
             update.eval(env);
         }
 
-        System.out.println(env.toString());
+        System.out.println("Printing the init environment: \n " + env.toString() + "\n\n");
     }
 
     public void nextCycle(Environment env, int i) {
@@ -203,7 +198,7 @@ class Circuit extends AST{
             update.eval(env);
         }
 
-        System.out.println(env.toString());
+        System.out.println("Printing env for cycle " + i + ": \n " + env.toString() + "\n\n");
     }
 
     public void runSimulator(Environment env) {
