@@ -182,5 +182,7 @@ class Circuit extends AST{
         for (Update update : updates) {
             update.eval(env);
         }
+
+        System.out.println(env.toString());
     }
 }
