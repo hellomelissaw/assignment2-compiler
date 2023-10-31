@@ -1,7 +1,4 @@
-import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.List;
-import java.util.ArrayList;
 
 public abstract class AST{
     public void error(String msg){
@@ -92,7 +89,7 @@ class Update extends AST{
     String name;
     Expr e;
     Update(String name, Expr e){this.e=e; this.name=name;}
-    public void Eval(Environment env){  env.setVariable(name,e.eval(env));}
+    public void eval(Environment env){  env.setVariable(name,e.eval(env));}
 }
 
 /* A Trace is a signal and an array of Booleans, for instance each
@@ -164,9 +161,26 @@ class Circuit extends AST{
     }
 
     public void initialize(Environment env) {
-        for(int i = 0 ; i < simlength ; i++){
-            String name = inputs.get(i);
-            env.setVariable(name, env.getVariable(name));
+        if(simlength == 0){
+            System.out.println("Input signals 0.");
+        } else {
+            for(int i = 0 ; i < simlength ; i++){
+                String name = inputs.get(i);
+                if(name == null){
+                    System.out.println("Input undefined.");
+                } else {
+                    env.setVariable(name, env.getVariable(name));
+                }
+
+            }
+        }
+
+        for (Latch latch : latches) {
+            latch.initialize(env);
+        }
+
+        for (Update update : updates) {
+            update.eval(env);
         }
     }
 }
