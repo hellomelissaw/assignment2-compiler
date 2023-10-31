@@ -9,7 +9,8 @@ class Environment {
     }
     
     public Boolean getVariable(String name){
-	Boolean value = variableValues.get(name); 
+	Boolean value = variableValues.get(name);
+		System.out.println("This is ");
 	if (value == null) { System.err.println("Variable not defined: "+name); System.exit(-1); }
 	return value;
     }

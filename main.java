@@ -11,7 +11,6 @@ import java.io.IOException;
 
 public class main {
     public static void main(String[] args) throws IOException{
-		System.out.println("Hi im printing");
 	// we expect exactly one argument: the name of the input file
 	if (args.length!=1) {
 	    System.err.println("\n");
@@ -54,7 +53,6 @@ public class main {
 	    simulation of the given hardware for given simulation
 	    inputs. The method for starting the simulation should be
 	    called here for the Circuit p. */
-
     }
 }
 

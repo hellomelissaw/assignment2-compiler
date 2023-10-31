@@ -110,12 +110,13 @@ class Trace extends AST{
 	this.values=values;
     }
     public String toString(){
-        StringBuilder signalTrace = new StringBuilder();
+        String signalTrace = "";
+        //StringBuilder signalTrace = new StringBuilder();
         for(boolean value : values) {
-            signalTrace.append(value);
+            //signalTrace.append(value);
+            signalTrace+=value;
         }
-        System.out.println("This is our signal trace: " + signalTrace);
-        return signalTrace.toString();
+        return signalTrace;
     }
 }
 
@@ -159,5 +160,13 @@ class Circuit extends AST{
 	this.latches=latches;
 	this.updates=updates;
 	this.siminputs=siminputs;
+    simlength = siminputs.size();
+    }
+
+    public void initialize(Environment env) {
+        for(int i = 0 ; i < simlength ; i++){
+            String name = inputs.get(i);
+            env.setVariable(name, env.getVariable(name));
+        }
     }
 }
