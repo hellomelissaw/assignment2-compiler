@@ -164,19 +164,39 @@ class Circuit extends AST{
         if(simlength == 0){
             System.out.println("Input signals 0.");
         } else {
-            for(int i = 0 ; i < simlength ; i++){
+                String name = inputs.get(0);
+                if(name == null){
+                    System.out.println("Input undefined.");
+                } else {
+                    env.setVariable(name, env.getVariable(name));
+                }
+        }
+
+        for (Latch latch : latches) {
+            latch.initialize(env);
+        }
+
+        for (Update update : updates) {
+            update.eval(env);
+        }
+
+        System.out.println(env.toString());
+    }
+
+    public void nextCycle(Environment env, int i) {
+        if(simlength == 0){
+            System.out.println("Input signals 0.");
+        } else {
                 String name = inputs.get(i);
                 if(name == null){
                     System.out.println("Input undefined.");
                 } else {
                     env.setVariable(name, env.getVariable(name));
                 }
-
-            }
         }
 
         for (Latch latch : latches) {
-            latch.initialize(env);
+            latch.nextCycle(env);
         }
 
         for (Update update : updates) {
