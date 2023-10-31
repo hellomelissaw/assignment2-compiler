@@ -179,15 +179,11 @@ class Circuit extends AST{
     }
 
     public void nextCycle(Environment env, int i) {
-        if(simlength == 0){
-            System.out.println("Input signals 0.");
-        } else {
-                String name = inputs.get(i);
-                if(name == null){
-                    System.out.println("Input undefined.");
-                } else {
-                    env.setVariable(name, env.getVariable(name));
-                }
+        for (Trace trace: siminputs) {
+            if(trace.values.length == 0){
+                System.err.println("Siminput value array length 0."); System.exit(-1);
+            }
+            env.setVariable(trace.signal, trace.values[i]);
         }
 
         for (Latch latch : latches) {
