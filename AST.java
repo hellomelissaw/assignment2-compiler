@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AST{
@@ -109,7 +110,11 @@ class Trace extends AST{
     public String toString(){
         String signalTrace = "";
         for(boolean value : values) {
-            signalTrace+=value;
+            if(value)
+                signalTrace+="1";
+            else
+                signalTrace+="0";
+
         }
         return signalTrace;
     }
@@ -141,7 +146,7 @@ class Circuit extends AST{
     List<Latch>  latches;
     List<Update> updates;
     List<Trace>  siminputs;
-    List<Trace>  simoutputs;
+    List<Trace> simoutputs;
     int simlength;
     Circuit(String name,
 	    List<String> inputs,
@@ -156,6 +161,7 @@ class Circuit extends AST{
 	this.updates=updates;
 	this.siminputs=siminputs;
     simlength = siminputs.size();
+    simoutputs = new ArrayList<Trace>();
     }
 
     public void initialize(Environment env) {
@@ -175,7 +181,7 @@ class Circuit extends AST{
             update.eval(env);
         }
 
-        System.out.println("Printing the init environment: \n " + env.toString() + "\n\n");
+        //System.out.println("Printing the init environment: \n " + env.toString() + "\n\n");
     }
 
     public void nextCycle(Environment env, int i) {
@@ -184,6 +190,7 @@ class Circuit extends AST{
                 System.err.println("Siminput value array length 0."); System.exit(-1);
             }
             env.setVariable(trace.signal, trace.values[i]);
+
         }
 
         for (Latch latch : latches) {
@@ -194,12 +201,17 @@ class Circuit extends AST{
             update.eval(env);
         }
 
-        System.out.println("Printing env for cycle " + i + ": \n " + env.toString() + "\n\n");
+        simoutputs.add(siminputs.get(i));
+
+        //System.out.println("Printing env for cycle " + i + ": \n " + env.toString() + "\n\n");
     }
 
     public void runSimulator(Environment env) {
         initialize(env);
         for(int i = 0 ; i < simlength ; i ++)
             nextCycle(env, i);
+
+        for(int i = 0 ; i < simlength ; i ++)
+            System.out.println(simoutputs.get(i).toString() + " " + simoutputs.get(i).signal);
     }
 }
