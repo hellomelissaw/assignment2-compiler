@@ -147,7 +147,7 @@ class Circuit extends AST{
     List<Update> updates;
     List<Trace>  siminputs;
     List<Trace> simoutputs;
-    int simlength = siminputs.get(0).values.length;
+    int simlength;
     Circuit(String name,
 	    List<String> inputs,
 	    List<String> outputs,
@@ -160,7 +160,7 @@ class Circuit extends AST{
 	this.latches=latches;
 	this.updates=updates;
 	this.siminputs=siminputs;
-    simlength = siminputs.size();
+    simlength = siminputs.get(0).values.length;
     simoutputs = new ArrayList<Trace>();
     }
 
@@ -187,7 +187,7 @@ class Circuit extends AST{
             update.eval(env);
         }
 
-        System.out.println("Printing the init environment: \n " + env.toString() + "\n\n");
+        //System.out.println("Printing the init environment: \n " + env.toString() + "\n\n");
     }
 
     public void nextCycle(Environment env, int i) {
@@ -211,7 +211,7 @@ class Circuit extends AST{
             trace.values[i] = env.getVariable(trace.signal);
         }
 
-        System.out.println("Printing env for cycle " + i + ": \n " + env.toString() + "\n\n");
+        //System.out.println("Printing env for cycle " + i + ": \n " + env.toString() + "\n\n");
     }
 
     public void runSimulator(Environment env) {
@@ -220,6 +220,6 @@ class Circuit extends AST{
             nextCycle(env, i);
 
         for (Trace trace : simoutputs)
-            System.out.println(trace.toString() + " " + trace.signal);
+            System.out.println(trace.toString() + " " + trace.signal + "<br>");
     }
 }
