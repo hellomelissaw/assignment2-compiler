@@ -147,7 +147,7 @@ class Circuit extends AST{
     List<Update> updates;
     List<Trace>  siminputs;
     List<Trace> simoutputs;
-    int simlength;
+    int simlength = siminputs.get(0).values.length;
     Circuit(String name,
 	    List<String> inputs,
 	    List<String> outputs,
@@ -166,12 +166,18 @@ class Circuit extends AST{
 
     public void initialize(Environment env) {
 
-            for (Trace trace: siminputs) {
-                if(trace.values.length == 0){
-                    System.err.println("Siminput value array length 0."); System.exit(-1);
-                }
-                env.setVariable(trace.signal, trace.values[0]);
+        for (Trace trace: siminputs) {
+            if(simlength == 0){
+                System.err.println("Siminput value array length 0."); System.exit(-1);
             }
+            env.setVariable(trace.signal, trace.values[0]);
+
+        }
+
+        for (String output : outputs){
+            Boolean[] values = new Boolean[simlength];
+            simoutputs.add(new Trace(output, values));
+        }
 
         for (Latch latch : latches) {
             latch.initialize(env);
@@ -181,7 +187,7 @@ class Circuit extends AST{
             update.eval(env);
         }
 
-        //System.out.println("Printing the init environment: \n " + env.toString() + "\n\n");
+        System.out.println("Printing the init environment: \n " + env.toString() + "\n\n");
     }
 
     public void nextCycle(Environment env, int i) {
@@ -201,17 +207,19 @@ class Circuit extends AST{
             update.eval(env);
         }
 
-        simoutputs.add(siminputs.get(i));
+        for (Trace trace : simoutputs) {
+            trace.values[i] = env.getVariable(trace.signal);
+        }
 
-        //System.out.println("Printing env for cycle " + i + ": \n " + env.toString() + "\n\n");
+        System.out.println("Printing env for cycle " + i + ": \n " + env.toString() + "\n\n");
     }
 
     public void runSimulator(Environment env) {
         initialize(env);
-        for(int i = 0 ; i < simlength ; i ++)
+        for (int i = 0; i < simlength; i++)
             nextCycle(env, i);
 
-        for(int i = 0 ; i < simlength ; i ++)
-            System.out.println(simoutputs.get(i).toString() + " " + simoutputs.get(i).signal);
+        for (Trace trace : simoutputs)
+            System.out.println(trace.toString() + " " + trace.signal);
     }
 }
