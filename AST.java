@@ -165,7 +165,7 @@ class Circuit extends AST{
     }
 
     public void initialize(Environment env) {
-
+        System.out.println("Simlength: " + simlength);
         for (Trace trace: siminputs) {
             if(simlength == 0){
                 System.err.println("Siminput value array length 0."); System.exit(-1);
@@ -177,6 +177,7 @@ class Circuit extends AST{
         for (String output : outputs){
             Boolean[] values = new Boolean[simlength];
             simoutputs.add(new Trace(output, values));
+
         }
 
         for (Latch latch : latches) {
@@ -216,10 +217,14 @@ class Circuit extends AST{
 
     public void runSimulator(Environment env) {
         initialize(env);
-        for (int i = 0; i < simlength; i++)
-            nextCycle(env, i);
 
-        for (Trace trace : simoutputs)
-            System.out.println(trace.toString() + " " + trace.signal + "<br>");
+        for (int i = 0; i < simlength; i++){
+            nextCycle(env, i);
+            //System.out.println("Simoutput values cycle" + i + ": " + simoutputs.get(i).values);
+        }
+
+
+      /*  for (Trace trace : simoutputs)
+            System.out.println(trace.toString() + " " + trace.signal + "<br>");*/
     }
 }
