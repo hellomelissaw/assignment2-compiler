@@ -1,3 +1,4 @@
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +92,6 @@ class Update extends AST{
     Expr e;
     Update(String name, Expr e){this.e=e; this.name=name;}
     public void eval(Environment env){
-        System.out.println("eval update: " + e.eval(env));
         env.setVariable(name,e.eval(env));
     }
 }
@@ -168,7 +168,6 @@ class Circuit extends AST{
     }
 
     public void initialize(Environment env) {
-        System.out.println("Simlength: " + simlength);
         for (Trace trace: siminputs) {
             if(simlength == 0){
                 System.err.println("Siminput value array length 0."); System.exit(-1);
@@ -228,14 +227,12 @@ class Circuit extends AST{
 
         for (int i = 1; i < simlength; i++){
             nextCycle(env, i);
-            //System.out.println("Simoutput values cycle" + i + ": " + simoutputs.get(i).values[i]);
         }
 
-        for(int i = 0 ; i < simoutputs.size(); i++)
-            for(int j = 0 ; j < simoutputs.get(i).values.length ; j++)
-                System.out.println("Simoutput values cycle" + i + ": " + simoutputs.get(i).values[j]);
+        for(Trace trace : siminputs)
+            System.out.println(trace.toString() + " " + trace.signal);
 
             for (Trace trace : simoutputs)
-                System.out.println(trace.toString() + " " + trace.signal + "<br>");
+                System.out.println(trace.toString() + " " + trace.signal);
     }
 }

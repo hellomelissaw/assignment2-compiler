@@ -48,6 +48,8 @@ public class main {
 	
 	Circuit p = (Circuit) new AstMaker().visit(parseTree);
 	p.runSimulator(new Environment());
+		System.out.println("Test");
+
 	/* For the second assignment you need to extend the classes of
 	    AST.java with some methods that correspond to running a
 	    simulation of the given hardware for given simulation
