@@ -217,15 +217,26 @@ class Circuit extends AST{
                 System.err.println("Siminput value array length 0."); System.exit(-1);
             }
             env.setVariable(trace.signal, trace.values[i]);
-
+            if(!env.typecheck(SignalType.INPUT, trace.signal)) {
+                System.out.println("Unexpected signal input type.");
+                System.exit(-1);
+            }
         }
 
         for (Latch latch : latches) {
             latch.nextCycle(env);
+            if(!env.typecheck(SignalType.LATCH, latch.outputname)) {
+                System.out.println("Unexpected signal latch type.");
+                System.exit(-1);
+            }
         }
 
         for (Update update : updates) {
             update.eval(env);
+            if(!env.typecheck(SignalType.UPDATE, update.name)) {
+                System.out.println("Unexpected signal update type.");
+                System.exit(-1);
+            }
         }
 
         for (Trace trace : simoutputs) {
