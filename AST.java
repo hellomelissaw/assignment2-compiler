@@ -1,3 +1,4 @@
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,7 +101,9 @@ class Update extends AST{
     String name;
     Expr e;
     Update(String name, Expr e){this.e=e; this.name=name;}
-    public void eval(Environment env){  env.setVariable(name,e.eval(env));}
+    public void eval(Environment env){
+        env.setVariable(name,e.eval(env));
+    }
 }
 
 /* A Trace is a signal and an array of Booleans, for instance each
@@ -175,7 +178,6 @@ class Circuit extends AST{
     }
 
     public void initialize(Environment env) {
-        System.out.println("Simlength: " + simlength);
         for (Trace trace: siminputs) {
             if(simlength == 0){
                 System.err.println("Siminput value array length 0."); System.exit(-1);
@@ -200,6 +202,11 @@ class Circuit extends AST{
             update.eval(env);
             env.setSignalType(update.name,SignalType.UPDATE);
         }
+        for (Trace trace : simoutputs) {
+            trace.values[0] = env.getVariable(trace.signal);
+        }
+
+
 
         //System.out.println("Printing the init environment: \n " + env.toString() + "\n\n");
     }
@@ -231,13 +238,14 @@ class Circuit extends AST{
     public void runSimulator(Environment env) {
         initialize(env);
 
-        for (int i = 0; i < simlength; i++){
+        for (int i = 1; i < simlength; i++){
             nextCycle(env, i);
-            //System.out.println("Simoutput values cycle" + i + ": " + simoutputs.get(i).values);
         }
 
+        for(Trace trace : siminputs)
+            System.out.println(trace.toString() + " " + trace.signal);
 
-      /*  for (Trace trace : simoutputs)
-            System.out.println(trace.toString() + " " + trace.signal + "<br>");*/
+            for (Trace trace : simoutputs)
+                System.out.println(trace.toString() + " " + trace.signal);
     }
 }

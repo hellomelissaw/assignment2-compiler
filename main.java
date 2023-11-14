@@ -38,8 +38,8 @@ public class main {
 	ParseTree parseTree = parser.start();
 
 	// The JaxMaker is a visitor that produces html/jax output as a string
-	String result = new JaxMaker().visit(parseTree);
-	System.out.println("\n\n\n"+result);
+	//String result = new JaxMaker().visit(parseTree);
+	//System.out.println("\n\n\n"+result);
 
 	/* The AstMaker generates the abstract syntax to be used for
 	   the second assignment, where for the start symbol of the
@@ -48,6 +48,8 @@ public class main {
 	
 	Circuit p = (Circuit) new AstMaker().visit(parseTree);
 	p.runSimulator(new Environment());
+		System.out.println("Test");
+
 	/* For the second assignment you need to extend the classes of
 	    AST.java with some methods that correspond to running a
 	    simulation of the given hardware for given simulation
