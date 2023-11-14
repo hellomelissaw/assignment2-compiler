@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
 
+ enum SignalType {
+    INPUT,LATCH,UPDATE
+}
+
 public abstract class AST{
     public void error(String msg){
 	System.err.println(msg);
@@ -10,6 +14,7 @@ public abstract class AST{
 
 abstract class Program extends AST{
     abstract public Boolean eval(Environment env);
+
 }
 
 /*class Sequence extends Program {
@@ -28,16 +33,20 @@ abstract class Program extends AST{
 
 abstract class Expr extends AST{
     abstract public Boolean eval(Environment env);
+
 }
 
-class Conjunction extends Expr{
-    Expr e1,e2;
-    Conjunction(Expr e1,Expr e2){this.e1=e1; this.e2=e2;}
+class Conjunction extends Expr {
+    Expr e1, e2;
 
-    public Boolean eval(Environment env) {
-       return e1.eval(env)&&e2.eval(env);
+    Conjunction(Expr e1, Expr e2) {
+        this.e1 = e1;
+        this.e2 = e2;
     }
 
+    public Boolean eval(Environment env) {
+        return e1.eval(env) && e2.eval(env);
+    }
 }
 
 class Disjunction extends Expr{
@@ -62,6 +71,7 @@ class Signal extends Expr{
     public Boolean eval(Environment env) {
         return env.getVariable(varname);
     }
+
 }
 
 // Latches have an input and output signal
@@ -171,6 +181,7 @@ class Circuit extends AST{
                 System.err.println("Siminput value array length 0."); System.exit(-1);
             }
             env.setVariable(trace.signal, trace.values[0]);
+            env.setSignalType(trace.signal,SignalType.INPUT);
 
         }
 
@@ -182,10 +193,12 @@ class Circuit extends AST{
 
         for (Latch latch : latches) {
             latch.initialize(env);
+            env.setSignalType(latch.outputname,SignalType.LATCH);
         }
 
         for (Update update : updates) {
             update.eval(env);
+            env.setSignalType(update.name,SignalType.UPDATE);
         }
 
         //System.out.println("Printing the init environment: \n " + env.toString() + "\n\n");

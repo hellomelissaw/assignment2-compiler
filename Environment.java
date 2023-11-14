@@ -3,10 +3,12 @@ import java.util.Map.Entry;
 
 class Environment {
     private HashMap<String,Boolean> variableValues = new HashMap<String,Boolean>();
+	private HashMap<String,SignalType> signalType = new HashMap<String,SignalType>();
     public Environment() { }
     public void setVariable(String name, Boolean value) {
 	variableValues.put(name, value);
     }
+	public void setSignalType(String name, SignalType type){signalType.put(name, type) ;}
     
     public Boolean getVariable(String name){
 	Boolean value = variableValues.get(name);
