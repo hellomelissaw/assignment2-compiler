@@ -1,9 +1,8 @@
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
  enum SignalType {
-    INPUT,LATCH,UPDATE
+    INPUT, LATCH_OUTPUT, UPDATE_OUTPUT
 }
 
 public abstract class AST{
@@ -34,7 +33,10 @@ abstract class Program extends AST{
 
 abstract class Expr extends AST{
     abstract public Boolean eval(Environment env);
+    abstract public SignalType typecheck(Environment env);
 
+    //TODO implement a settype and typcheck expressions, that they either are output of  a prev update
+    //or an input signal or output latch
 }
 
 class Conjunction extends Expr {
@@ -84,8 +86,20 @@ class Latch extends AST{
 	this.inputname=inputname;
 	this.outputname=outputname;
     }
+
+    //TODO we should make a generic typechecker, that just returns the type and then use it in here. SO gør intialize om
+    //so we should check the latchoutput , is not already in the inputs
     public void initialize(Environment env) {
-        env.setVariable(outputname,false);
+
+        Boolean t1=env.typecheck(SignalType.INPUT,inputname);
+        Boolean t2=env.typecheck(SignalType.LATCH_OUTPUT,outputname);
+        if (t1&&t2){
+            env.setVariable(outputname,false);
+        }
+        else {
+            System.out.println("unexpected Latch signal");
+            System.exit(-1);
+        }
     }
 
     public void nextCycle(Environment env){
@@ -96,11 +110,12 @@ class Latch extends AST{
 
 // An Update is any of the lines " signal = expression "
 // in the .update section
-
+//TODO check if the update input is not any of input,latchout,or prev update , typecheck the output of update for the mentioed 3
 class Update extends AST{
     String name;
     Expr e;
     Update(String name, Expr e){this.e=e; this.name=name;}
+
     public void eval(Environment env){
         env.setVariable(name,e.eval(env));
     }
@@ -183,7 +198,6 @@ class Circuit extends AST{
                 System.err.println("Siminput value array length 0."); System.exit(-1);
             }
             env.setVariable(trace.signal, trace.values[0]);
-            env.setSignalType(trace.signal,SignalType.INPUT);
 
         }
 
@@ -195,12 +209,10 @@ class Circuit extends AST{
 
         for (Latch latch : latches) {
             latch.initialize(env);
-            env.setSignalType(latch.outputname,SignalType.LATCH);
         }
 
         for (Update update : updates) {
             update.eval(env);
-            env.setSignalType(update.name,SignalType.UPDATE);
         }
         for (Trace trace : simoutputs) {
             trace.values[0] = env.getVariable(trace.signal);
@@ -217,26 +229,17 @@ class Circuit extends AST{
                 System.err.println("Siminput value array length 0."); System.exit(-1);
             }
             env.setVariable(trace.signal, trace.values[i]);
-            if(!env.typecheck(SignalType.INPUT, trace.signal)) {
-                System.out.println("Unexpected signal input type.");
-                System.exit(-1);
-            }
+
         }
 
         for (Latch latch : latches) {
             latch.nextCycle(env);
-            if(!env.typecheck(SignalType.LATCH, latch.outputname)) {
-                System.out.println("Unexpected signal latch type.");
-                System.exit(-1);
-            }
+
         }
 
         for (Update update : updates) {
             update.eval(env);
-            if(!env.typecheck(SignalType.UPDATE, update.name)) {
-                System.out.println("Unexpected signal update type.");
-                System.exit(-1);
-            }
+
         }
 
         for (Trace trace : simoutputs) {
