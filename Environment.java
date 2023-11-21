@@ -7,11 +7,13 @@ class Environment {
 
     public Environment() {
     }
-    public Boolean typecheck(SignalType expectedType, String signalName) {
-        if(signalType.get(signalName).equals(expectedType))
-            return true;
-        else
-            return false;
+    public SignalType typecheck(String signalName) {
+        for (String key :signalType.keySet()) {
+            if(key.equals(signalName))
+                return signalType.get(key);
+        }
+        System.out.println("key not found");
+        return null;
     }
     public void setVariable(String name, Boolean value) {
         variableValues.put(name, value);

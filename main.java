@@ -63,8 +63,7 @@ public class main {
 class JaxMaker extends AbstractParseTreeVisitor<String> implements hwVisitor<String> {
 
     public String visitStart(hwParser.StartContext ctx){
-	// 
-	String result = "<!DOCTYPE html>\n"+
+	/*String result = "<!DOCTYPE html>\n"+
 	    "<html><head><title> "+ctx.name.getText()+ "</title>\n"+
 	    "<script src=\"https://polyfill.io/v3/polyfill.min.js?features=es6\"></script>\n"+
 	    "<script type=\"text/javascript\" id=\"MathJax-script\" async src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n"+
@@ -97,7 +96,8 @@ class JaxMaker extends AbstractParseTreeVisitor<String> implements hwVisitor<Str
 	for(hwParser.SimInpContext t:ctx.simin)
 	    result+= visit(t);
 
-	result += "\n</body></html>\n";
+	result += "\n</body></html>\n";*/
+		String result = "";
 	return result;
     };
 

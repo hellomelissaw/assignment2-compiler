@@ -7,8 +7,8 @@
 Oscillator -> OscillatorM
 
 .update
-Oscillator = Reset
-OscillatorM = !(Oscillator  && x &&y )
+
+Oscillator = !OscillatorM && !Reset
 
 .simulate
 Reset=0000100
