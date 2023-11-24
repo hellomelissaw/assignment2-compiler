@@ -48,7 +48,6 @@ public class main {
 	
 	Circuit p = (Circuit) new AstMaker().visit(parseTree);
 	p.runSimulator(new Environment());
-		System.out.println("Test");
 
 	/* For the second assignment you need to extend the classes of
 	    AST.java with some methods that correspond to running a
@@ -63,41 +62,7 @@ public class main {
 class JaxMaker extends AbstractParseTreeVisitor<String> implements hwVisitor<String> {
 
     public String visitStart(hwParser.StartContext ctx){
-	/*String result = "<!DOCTYPE html>\n"+
-	    "<html><head><title> "+ctx.name.getText()+ "</title>\n"+
-	    "<script src=\"https://polyfill.io/v3/polyfill.min.js?features=es6\"></script>\n"+
-	    "<script type=\"text/javascript\" id=\"MathJax-script\" async src=\"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js\">\n"+
-	    "</script></head><body>\n";
-	result+="<h1>" +ctx.name.getText()+ "</h1>\n"
-	    + "<h2> Inputs </h2>\n";
-       
-	for(Token t:ctx.ins){
-	    result += t.getText() + " ";
-	}
-
-	result+="\n <h2> Outputs </h2>\n ";
-	for(Token t:ctx.outs){
-	    result += t.getText()+ " ";
-	}
-
-	result+="\n <h2> Latches </h2>\n";
-
-	for(hwParser.LatchdeclContext t:ctx.ls){
-	    result +=  visit(t);
-	}
-
-	result+="\n <h2> Updates </h2>\n";
-	
-	for(hwParser.UpdatedeclContext t:ctx.up){
-	    result += visit(t);
-	}
-
-	result+="\n <h2> Simulation inputs </h2>\n";
-	for(hwParser.SimInpContext t:ctx.simin)
-	    result+= visit(t);
-
-	result += "\n</body></html>\n";*/
-		String result = "";
+		String result = ""; // no longer printing the html
 	return result;
     };
 

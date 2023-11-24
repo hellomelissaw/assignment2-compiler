@@ -12,7 +12,7 @@ class Environment {
             if(key.equals(signalName))
                 return signalType.get(key);
         }
-        System.out.println("key not found");
+        //System.out.println("key not found");
         return null;
     }
     public void setVariable(String name, Boolean value) {
@@ -25,7 +25,6 @@ class Environment {
 
     public Boolean getVariable(String name) {
         Boolean value = variableValues.get(name);
-        //System.out.println("This is ");
         if (value == null) {
             System.err.println("Variable not defined: " + name);
             System.exit(-1);

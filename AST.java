@@ -107,10 +107,8 @@ class Signal extends Expr {
 
     public Boolean check(Environment env) {
         if (env.typecheck(varname) != null){
-            System.out.println("printout the varname "+varname + " returning true");
             return true;
         } else {
-            System.out.println("printout the varname "+varname + " returning false");
             return false;
         }
     }
@@ -130,11 +128,7 @@ class Latch extends AST {
     //TODO we should make a generic typechecker, that just returns the type and then use it in here. SO gør intialize om
     //so we should check the latchoutput , is not already in the inputs
     public void initialize(Environment env) {
-        System.out.println("input name in initialize latch: " + inputname);
-        //SignalType t1 = env.typecheck(inputname);
         SignalType t2 = env.typecheck(outputname);
-        //System.out.println("input name: " + inputname + "type: " + t1);
-        System.out.println("output name: " + outputname + "type: " + t2);
         if (t2 == null) {
             env.setVariable(outputname, false);
         } else {
@@ -144,7 +138,7 @@ class Latch extends AST {
     }
 
     public void nextCycle(Environment env) {
-        System.out.println("In next cycle latch inputname: " + inputname);
+        //System.out.println("In next cycle latch inputname: " + inputname);
         env.setVariable(outputname, env.getVariable(inputname));
     }
 
@@ -172,15 +166,20 @@ class Update extends AST {
             env.setSignalType(name,SignalType.UPDATE_OUTPUT);
             return true;
         }
-        else return false;
+
+        else {
+            System.out.println("Unexpected update signal");
+            return false;
+        }
     }
 
     public Boolean updateIsValid(Update update, Environment env) {
+        System.out.println("Checking if update is valid");
         SignalType t = env.typecheck(update.name);
         if (t == null) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 }
@@ -295,7 +294,6 @@ class Circuit extends AST {
 
         }
         for (Trace trace : simoutputs) {
-            System.out.println("Trace simoutputs name: " + trace.signal);
             trace.values[0] = env.getVariable(trace.signal);
         }
 
@@ -324,7 +322,6 @@ class Circuit extends AST {
         }
 
         for (Trace trace : simoutputs) {
-            System.out.println("trace simoutputs in circuit net cycle: " + trace.signal);
             trace.values[i] = env.getVariable(trace.signal);
         }
 
@@ -343,5 +340,7 @@ class Circuit extends AST {
 
         for (Trace trace : simoutputs)
             System.out.println(trace.toString() + " " + trace.signal);
+
+        System.out.println(" ");
     }
 }
